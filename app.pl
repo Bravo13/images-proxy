@@ -11,6 +11,23 @@ get '/' => sub {
 	status_ok({ok => 1});
 };
 
+# getting list of images and caching
+get '/images' => sub {
+	my $images;
+	try {
+		$images = _api_call( GET => '/images', params() );
+		if( $images->{pictures} ){
+			for my $image (@{$images->{pictures}}){
+				my $image_details = _api_call( GET => '/images/'.$image->{id} );
+				_cache_image_data($image_details);
+			}
+		}
+	} catch {
+		return status_error({error => $@});
+	}
+	status_ok({list=>$images});
+};
+
 # getting api token
 sub _get_auth_token {
 	my $api_key = shift;
