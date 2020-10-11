@@ -11,6 +11,34 @@ get '/' => sub {
 	status_ok({ok => 1});
 };
 
+# getting api token
+sub _get_auth_token {
+	my $api_key = shift;
+
+	my $request = HTTP::Request->new(POST => 'http://interview.agileengine.com:80/auth');
+	$request->content_type('application/json');
+	$request->content(encode_json({apiKey => $api_key}));
+
+	my $ua = LWP::UserAgent->new();
+	my $response = $ua->request($request);
+
+	if( $response->is_success ){
+		my $result; 
+		try {
+			$result = decode_json($response->content);
+		} catch {
+			die 'Error while parsing response '.$@;
+		}
+
+		if($result->{auth}){
+			return $result->{token};
+		} else {
+			die "Result 'auth' is not true";
+		}
+	} else {
+		die 'Error while retrieving token '.$response->status_line;
+	}
+}
 
 # Just inits tables in DB
 sub _init_db_schema {
