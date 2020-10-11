@@ -28,6 +28,34 @@ get '/images' => sub {
 	status_ok({list=>$images});
 };
 
+# just get image data 
+get '/images/:id' => sub {
+	my $image;
+	try {
+		$image = _api_call( GET => '/images/'.params->{id} );
+		_cache_image_data($image);
+	} catch {
+		return status_error({error => $@});
+	}
+	status_ok({image => $image});
+};
+
+# searching handler. After receiving clients search term
+# it passed to cache getter which returns all ids for this
+# term. When it's done this ids used to retrieve full data
+# form database
+get '/search/:searchTerm' => sub {
+	my $term = param('searchTerm');
+	my $items_packed = cache->get($term);
+	my @list;
+	if($items_packed){
+		my @ids = _unpack_cache_data($items_packed);
+		@list = database()->quick_select('images', { id => \@ids });
+	}
+	status_ok({list => \@list});
+};
+
+
 # getting api token
 sub _get_auth_token {
 	my $api_key = shift;
