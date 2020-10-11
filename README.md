@@ -20,21 +20,21 @@ serializer: "JSON"
 
 plugins:
   Database:
-	    driver: "SQLite"
-			    database: 'app.sqlite'
-					  "Cache::CHI":
-						    driver: "Memory"
-								    global: 1
-										
-										logger: Console
-										
-										api_key: "<PUT_YOUR_TOKEN_HERE>"
-										 
-										 engines:
-										   logger:
-											     Console:
-													       log_level: core
-																 
+		driver: "SQLite"
+		database: 'app.sqlite'
+	"Cache::CHI":
+		driver: "Memory"
+		global: 1
+
+logger: Console
+
+api_key: "<PUT_YOUR_TOKEN_HERE>"
+
+engines:
+	logger:
+		Console:
+			log_level: core
+
 ```
 
 ## Running
