@@ -22,7 +22,7 @@ plugins:
   Database:
     driver: "SQLite"
     database: 'app.sqlite'
-	"Cache::CHI":
+  "Cache::CHI":
     driver: "Memory"
     global: 1
 
@@ -31,7 +31,7 @@ logger: Console
 api_key: "<PUT_YOUR_TOKEN_HERE>"
 
 engines:
-	logger:
+  logger:
     Console:
       log_level: core
 
